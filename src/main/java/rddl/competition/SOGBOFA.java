@@ -446,7 +446,7 @@ public class SOGBOFA {
 		}
 	}
 	
-	static Element parseMessage(DOMParser p, InputSource isrc) throws RDDLXMLException {
+	public static Element parseMessage(DOMParser p, InputSource isrc) throws RDDLXMLException {
 		try {
 			p.parse(isrc);
 		} catch (SAXException e1) {
@@ -466,7 +466,7 @@ public class SOGBOFA {
 		return p.getDocument().getDocumentElement();
 	}
 	
-	static String serialize(Document dom) {
+	public static String serialize(Document dom) {
 		OutputFormat format = new OutputFormat(dom);
 //		format.setIndenting(true);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -482,7 +482,7 @@ public class SOGBOFA {
 		return null;
 	}
 	
-	static XMLType getXMLType(DOMParser p,InputSource isrc) {
+	public static XMLType getXMLType(DOMParser p,InputSource isrc) {
 		Element e = p.getDocument().getDocumentElement();
 		if ( e.getNodeName().equals("turn") ) {
 			return XMLType.TURN;
@@ -497,7 +497,7 @@ public class SOGBOFA {
 		}
 	}
 	
-	static String createXMLSessionRequest (String problemName, String clientName) {
+	public static String createXMLSessionRequest (String problemName, String clientName) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			//get an instance of builder
@@ -516,7 +516,7 @@ public class SOGBOFA {
 		}
 	}
 	
-	static String createXMLRoundRequest(boolean ifExcutePolicy) {
+	public static String createXMLRoundRequest(boolean ifExcutePolicy) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			DocumentBuilder db = dbf.newDocumentBuilder();
@@ -530,7 +530,7 @@ public class SOGBOFA {
 		}
 	}
 	
-	static Client processXMLSessionInit(DOMParser p, InputSource isrc, String instanceName) throws RDDLXMLException {
+	public static Client processXMLSessionInit(DOMParser p, InputSource isrc, String instanceName) throws RDDLXMLException {
 		try {
 			p.parse(isrc);
 		} catch (SAXException e1) {
@@ -582,7 +582,7 @@ public class SOGBOFA {
 		return c;
 	}
 	
-	static String createXMLAction(ArrayList<PVAR_INST_DEF> ds) {
+	public static String createXMLAction(ArrayList<PVAR_INST_DEF> ds) {
 	//static String createXMLAction(State state, Policy policy) {
 		try {  
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -631,7 +631,7 @@ public class SOGBOFA {
 		return null;
 	}
 	
-	static int getANumber (DOMParser p, InputSource isrc, 
+	public static int getANumber (DOMParser p, InputSource isrc,
 			String parentName, String name) {
 		Element e = p.getDocument().getDocumentElement();
 		if ( e.getNodeName().equals(parentName) ) {
@@ -641,7 +641,7 @@ public class SOGBOFA {
 		return -1;
 	}
 
-	static long processXMLRoundInit(DOMParser p, InputSource isrc,
+	public static long processXMLRoundInit(DOMParser p, InputSource isrc,
 			int curRound) throws RDDLXMLException {
 		try {
 			p.parse(isrc);
@@ -674,7 +674,7 @@ public class SOGBOFA {
 		return 0;
 	}
 	
-	static long getTimeLeft(Element e) {
+	public static long getTimeLeft(Element e) {
 		ArrayList<String> r = Server.getTextValue(e, Server.TIME_LEFT);
 		if ( r == null ) {
 			return -1;
@@ -682,7 +682,7 @@ public class SOGBOFA {
 		return Long.valueOf(r.get(0));
 	}
 	
-	static ArrayList<PVAR_INST_DEF> processXMLTurn (Element e,
+	public static ArrayList<PVAR_INST_DEF> processXMLTurn (Element e,
 			State state) throws RDDLXMLException {
 
 		if ( e.getNodeName().equals(Server.TURN) ) {
@@ -723,7 +723,7 @@ public class SOGBOFA {
 		//return null;
 	}
 	
-	static double processXMLRoundEnd(Element e) throws RDDLXMLException {
+	public static double processXMLRoundEnd(Element e) throws RDDLXMLException {
 		if ( e.getNodeName().equals(Server.ROUND_END) ) {
 			ArrayList<String> text = Server.getTextValue(e, Server.ROUND_REWARD);
 			if ( text == null ) {
@@ -734,7 +734,7 @@ public class SOGBOFA {
 		return -1;
 	}
 			
-	static double processXMLSessionEnd(DOMParser p, InputSource isrc) throws RDDLXMLException {
+	public static double processXMLSessionEnd(DOMParser p, InputSource isrc) throws RDDLXMLException {
 		try {
 			p.parse(isrc);
 		} catch (SAXException e1) {
