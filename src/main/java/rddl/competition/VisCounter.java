@@ -12,7 +12,7 @@ public class VisCounter{
 	public double depthTime = 0;
 	public double sizeTime = 0;
 	public double sizeInTotal = 0;
-	VisCounter(){
+	public VisCounter(){
 		randomInTotal = 0;
 		randomTime = 0;
 		updatesInTotal = 0;
