@@ -226,7 +226,7 @@ public class Server implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	Server (Socket s, int i, RDDL rddl, StateViz state_viz, int port, RandomDataGenerator rgen) {
+	public Server (Socket s, int i, RDDL rddl, StateViz state_viz, int port, RandomDataGenerator rgen) {
 		this.connection = s;
 		this.id = i;
 		this.rddl = rddl;
