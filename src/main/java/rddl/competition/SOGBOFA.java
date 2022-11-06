@@ -62,24 +62,24 @@ public class SOGBOFA {
 	public static final boolean SHOW_MEMORY_USAGE = true;
 	public static final Runtime RUNTIME = Runtime.getRuntime();
 	public static final int DEFAULT_RANDOM_SEED = 0;
-	private static DecimalFormat _df = new DecimalFormat("0.##");	
+	public static DecimalFormat _df = new DecimalFormat("0.##");
 	enum XMLType {
 		ROUND,TURN,ROUND_END,END_TEST,NONAME
 	}
 
-	private static RDDL rddl = new RDDL();
+	public static RDDL rddl = new RDDL();
 
-	static int numRounds;
-	static double timeAllowed;
-	static int curRound;
-	double reward;
-	static int roundsLeft;
-	static int turnLeft;
-	int id;
+	public static int numRounds;
+	public static double timeAllowed;
+	public static int curRound;
+	public double reward;
+	public static int roundsLeft;
+	public static int turnLeft;
+	public int id;
 
 	//used for policy pre-processing
 	//number of additional rounds to test the depth setup
-	SOGBOFA () {
+	public SOGBOFA () {
 		numRounds = 0;
 		timeAllowed = 0;
 		curRound = 0;
@@ -88,7 +88,7 @@ public class SOGBOFA {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param args
 	 * 1. rddl description file name with RDDL syntax, with complete path (sysadmin.rddl)
 	 * 2. instance name in rddl / directory of rddl files
@@ -109,7 +109,7 @@ public class SOGBOFA {
 	 */
 	
 	
-	public static void Run(State state, INSTANCE instance, NONFLUENTS nonFluents, DOMAIN domain, 
+	public static void Run(State state, INSTANCE instance, NONFLUENTS nonFluents, DOMAIN domain,
 			InputSource isrc, Client client, OutputStreamWriter osw, String msg, Policy policy, Class c, BufferedInputStream isr,
 			DOMParser p, String instanceName, String clientName) throws IOException, RDDLXMLException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, EvalException {
 		int r = 0;
@@ -118,36 +118,36 @@ public class SOGBOFA {
 		long totalStepLeft = totalRounds * instance._nHorizon;
 		long totalStepUsed = 0;
 		double totalTimeUsage = 0;
-		
+
 		double totalTimeForInit = 0;
-		
+
 		double TotalTimeAllowed = client.timeAllowed;//120 * totalStepLeft * 1000;
-		double emergentTime = 3.0 * totalStepLeft / (80 * 100); 
-		
-		
+		double emergentTime = 3.0 * totalStepLeft / (80 * 100);
+
+
 		for( ; r < totalRounds; r++ ) {
 			double t0 = System.currentTimeMillis();
 			if (SHOW_MEMORY_USAGE)
-				System.out.print("[ Memory usage: " + 
-						_df.format((RUNTIME.totalMemory() - RUNTIME.freeMemory())/1e6d) + "Mb / " + 
-						_df.format(RUNTIME.totalMemory()/1e6d) + "Mb" + 
-						" = " + _df.format(((double) (RUNTIME.totalMemory() - RUNTIME.freeMemory()) / 
+				System.out.print("[ Memory usage: " +
+						_df.format((RUNTIME.totalMemory() - RUNTIME.freeMemory())/1e6d) + "Mb / " +
+						_df.format(RUNTIME.totalMemory()/1e6d) + "Mb" +
+						" = " + _df.format(((double) (RUNTIME.totalMemory() - RUNTIME.freeMemory()) /
 										   (double) RUNTIME.totalMemory())) + " ]\n");
-			
+
 			state.init(domain._hmObjects, nonFluents != null ? nonFluents._hmObjects : null, instance._hmObjects,
 					domain._hmTypes, domain._hmPVariables, domain._hmCPF,
 					instance._alInitState, nonFluents == null ? new ArrayList<PVAR_INST_DEF>() : nonFluents._alNonFluents, instance._alNonFluents,
-					domain._alStateConstraints, domain._alActionPreconditions, domain._alStateInvariants,  
+					domain._alStateConstraints, domain._alActionPreconditions, domain._alStateInvariants,
 					domain._exprReward, instance._nNonDefActions);
-					
+
 			msg = createXMLRoundRequest(true);
 			totalTimeUsage += System.currentTimeMillis() - t0;
 			totalTimeForInit += System.currentTimeMillis() - t0;
 			double timePerInit = totalTimeForInit / (r + 1);
-			
+
 			Server.sendOneMessage(osw, msg);
 			isrc = Server.readOneMessage(isr);
-			
+
 			t0 = System.currentTimeMillis();
 			processXMLRoundInit(p, isrc, r+1);
 
@@ -159,7 +159,7 @@ public class SOGBOFA {
 				if (SHOW_MSG) System.out.println("Reading turn message");
 				totalTimeUsage += System.currentTimeMillis() - t0;
 				isrc = Server.readOneMessage(isr);
-				
+
 				t0 = System.currentTimeMillis();
 				Element e = parseMessage(p, isrc);
 				round_ended_early = e.getNodeName().equals(Server.ROUND_END);
@@ -169,19 +169,19 @@ public class SOGBOFA {
 				//if (SHOW_XML)
 				//	Server.printXMLNode(e); // DEBUG
 				ArrayList<PVAR_INST_DEF> obs = processXMLTurn(e,state);
-				
+
 				//time allowed is deducted by 3 seconds to avoid time issue
 				System.out.println("\n******************************************");
 				System.out.println("New Turn Started. Starting initialization...");
 				System.out.println("******************************************");
 				System.out.println("Time left: " + timeAllowed);
-				
+
 				boolean ifEmeergency = false;
 				if(r != 0 || h != 0) {
-					
+
 					//directly go to emergency return mode
-					
-					
+
+
 					System.out.println("Total time used: " + totalTimeUsage);
 					System.out.println("Time per Init: " + timePerInit);
 					System.out.println("Runs left: " + (totalRounds - r - 1));
@@ -191,11 +191,11 @@ public class SOGBOFA {
 						System.out.println("Emergent!! With time = " + timeAllowed);
 						ifEmeergency = true;
 					}
-					
+
 				}
-				
+
 				System.out.println("We use " + timeAllowed + " to calculate");
-				
+
 				//calculate total time for this step
 				double timeForStep = timeAllowed / totalStepLeft;
 				if(r == 0 && h == 0) {
@@ -205,13 +205,13 @@ public class SOGBOFA {
 				else {
 					Policy.ifFirstStep = false;
 				}
-				
+
 				//calculate avg time usage
 				//if the avg time usage is too long to complete the step
 				//simply do random
-				
+
 				totalStepUsed ++;
-				
+
 				if (SHOW_MSG) System.out.println("Done parsing turn message");
 				if ( obs == null ) {
 					if (SHOW_MSG) System.out.println("No state/observations received.");
@@ -230,10 +230,10 @@ public class SOGBOFA {
 				policy.timeAllowed = client.timeAllowed;
 				policy.instanceName = instanceName;
 				policy.algoName = clientName;
-				
+
 				System.out.println("Steps left: " + totalStepLeft);
 				System.out.println("Time allowed for this step: " + timeForStep);
-				
+
 				ArrayList<PVAR_INST_DEF> actions = null;
 				if(ifEmeergency){
 					System.out.println("Time is not sufficient. Require: " + (totalTimeUsage / totalStepUsed)
@@ -263,10 +263,10 @@ public class SOGBOFA {
 				isrc = Server.readOneMessage(isr);
 			Element round_end_msg = parseMessage(p, isrc);
 			double reward = processXMLRoundEnd(round_end_msg);
-			
+
 			policy.roundEnd(reward);
-			
-			
+
+
 			//System.out.println("Round reward: " + reward);
 			if (getTimeLeft(round_end_msg) <= 0l)
 				break;
@@ -304,7 +304,7 @@ public class SOGBOFA {
 		double total_reward = processXMLSessionEnd(p, isrc);
 		policy.sessionEnd(total_reward);
 	}
-	
+
 	
 	public static void main(String[] args) {
 
@@ -315,14 +315,14 @@ public class SOGBOFA {
 		String clientName = "SOGBOFA";
 		String instanceName = null;
 		int randomSeed = DEFAULT_RANDOM_SEED;
-		
+
 		State      state;
 		INSTANCE   instance;
 		NONFLUENTS nonFluents = null;
 		DOMAIN     domain;
 		StateViz   stateViz;
 		StringBuffer instr = new StringBuffer();
-		
+
 		Socket connection = null;
 		try {
 			try {
@@ -335,8 +335,8 @@ public class SOGBOFA {
 				}else {
 					clientName = "L_C_SOGBOFA";
 				}
-				
-				
+
+
 				//connect to the server
 				//get back the content of the rddl files
 				//get rddl
@@ -345,7 +345,7 @@ public class SOGBOFA {
 				/** Establish a socket connetion */
 				connection = new Socket(address, port);
 				System.out.println("RDDL client initialized");
-				
+
 				/** Instantiate a BufferedOutputStream object */
 				BufferedOutputStream bos = new BufferedOutputStream(connection.
 						getOutputStream());
@@ -362,52 +362,52 @@ public class SOGBOFA {
 				 */
 				//InputStreamReader isr = new InputStreamReader(bis, "US-ASCII");
 				DOMParser p = new DOMParser();
-				
+
 				/**Read the socket's InputStream and append to a StringBuffer */
 				InputSource isrc = Server.readOneMessage(isr);
 				Client client = processXMLSessionInit(p, isrc, instanceName);
-				
+
 				System.out.println(client.id + ":" + client.numRounds);
 				System.out.println("Total time allowed: " + client.timeAllowed);
 
 				VisCounter visCounter = new VisCounter();
-				
+
 				// Cannot assume always in rddl.policy
 				Class c = Class.forName("rddl.policy." + clientName);
-					
+
 				//prepare for planning
 				state = new State();
-				
+
 				// Note: following constructor approach suggested by Alan Olsen
 				Policy policy = (Policy)c.getConstructor(
 						new Class[]{String.class}).newInstance(new Object[]{instanceName});
 				//policy.setRDDL(rddl);
-				
-				
-				
+
+
+
 				policy.setRandSeed(randomSeed);
 				policy.setVisCounter(visCounter);
 
-				
+
 				instance = rddl._tmInstanceNodes.get(instanceName);
-				
+
 				if (instance._sNonFluents != null) {
 					nonFluents = rddl._tmNonFluentNodes.get(instance._sNonFluents);
 				}
-				
+
 				domain = rddl._tmDomainNodes.get(instance._sDomain);
 				if (nonFluents != null && !instance._sDomain.equals(nonFluents._sDomain)) {
-					System.err.println("Domain name of instance and fluents do not match: " + 
+					System.err.println("Domain name of instance and fluents do not match: " +
 								instance._sDomain + " vs. " + nonFluents._sDomain);
 					System.exit(1);
 				}
-				
+
 				state.init(domain._hmObjects, nonFluents != null ? nonFluents._hmObjects : null, instance._hmObjects,
 						domain._hmTypes, domain._hmPVariables, domain._hmCPF,
 						instance._alInitState, nonFluents == null ? new ArrayList<PVAR_INST_DEF>() : nonFluents._alNonFluents, instance._alNonFluents,
-						domain._alStateConstraints, domain._alActionPreconditions, domain._alStateInvariants, 
+						domain._alStateConstraints, domain._alActionPreconditions, domain._alStateInvariants,
 						domain._exprReward, instance._nNonDefActions);
-				
+
 				// If necessary, correct the partially observed flag since this flag determines what content will be seen by the Client
 				if ((domain._bPartiallyObserved && state._alObservNames.size() == 0)
 						|| (!domain._bPartiallyObserved && state._alObservNames.size() > 0)) {
@@ -417,7 +417,7 @@ public class SOGBOFA {
 					domain._bPartiallyObserved = observations_present;
 				}
 
-				// Not strictly enforcing flags anymore... 
+				// Not strictly enforcing flags anymore...
 				//if ((domain._bPartiallyObserved && state._alObservNames.size() == 0)
 				//		|| (!domain._bPartiallyObserved && state._alObservNames.size() > 0)) {
 				//	System.err.println("Domain '" + domain._sDomainName + "' partially observed flag and presence of observations mismatched.");
