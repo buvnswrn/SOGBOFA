@@ -119,16 +119,16 @@ public class Server implements Runnable {
 	private static DecimalFormat _df = new DecimalFormat("0.##");
 	
 	
-	private Socket connection;
-	private RDDL rddl = null;
-	private static int ID = 0;
-	private static int DEFAULT_NUM_ROUNDS = 30;
-	private static long DEFAULT_TIME_ALLOWED = 1080000; // milliseconds = 18 minutes
-	private static boolean USE_TIMEOUT = true;
-	private static boolean INDIVIDUAL_SESSION = false;
-	private static String LOG_FILE = "rddl";
-	private static boolean MONITOR_EXECUTION = false;
-	private static String SERVER_FILES_DIR = "";
+	public Socket connection;
+	public RDDL rddl = null;
+	public static int ID = 0;
+	public static int DEFAULT_NUM_ROUNDS = 30;
+	public static long DEFAULT_TIME_ALLOWED = 1080000; // milliseconds = 18 minutes
+	public static boolean USE_TIMEOUT = true;
+	public static boolean INDIVIDUAL_SESSION = false;
+	public static String LOG_FILE = "rddl";
+	public static boolean MONITOR_EXECUTION = false;
+	public static String SERVER_FILES_DIR = "";
 	//private static String CLIENT_FILES_DIR = "";
     
 	public int port;
