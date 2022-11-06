@@ -69,13 +69,13 @@ public class Client {
 
 	private static RDDL rddl = new RDDL();
 
-	static int numRounds;
-	static double timeAllowed;
-	static int curRound;
-	double reward;
-	static int roundsLeft;
-	static int turnLeft;
-	int id;
+	public static int numRounds;
+	public static double timeAllowed;
+	public static int curRound;
+	public double reward;
+	public static int roundsLeft;
+	public static int turnLeft;
+	public int id;
 	
 	
 
