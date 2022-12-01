@@ -321,7 +321,7 @@ public class Server implements Runnable {
 					if (SHOW_MSG)
 						System.out.println("Sending msg:\n" + msg);
 					sendOneMessage(osw,msg);
-
+					// TODO: insert client processing code here
 					isrc = readOneMessage(isr);	
 					if (isrc == null)
 						throw new Exception("FATAL SERVER EXCEPTION: EMPTY CLIENT MESSAGE");
@@ -563,7 +563,7 @@ public class Server implements Runnable {
 
 	}
 	
-	static Object getValue(String pname, String pvalue, State state) {
+	public static Object getValue(String pname, String pvalue, State state) {
 		
 		// Get the fluent value's range
 		TYPE_NAME tname = state._hmPVariables.get(new PVAR_NAME(pname))._typeRange;
