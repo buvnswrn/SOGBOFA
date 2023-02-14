@@ -14,6 +14,8 @@ non-fluents drone_inspection_nf {
     };
 
     non-fluents {
+        MOVE_PROB(mavic2) = 0.9;
+        ACTION_PROB(mavic2) = 0.9;
         BOX-IN-SHELF(shelf_511466, box_502908);
 		BOX-IN-SHELF(shelf_511352, box_502924);
 		BOX-IN-SHELF(shelf_511352, box_503080);

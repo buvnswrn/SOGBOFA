@@ -9,7 +9,6 @@
 domain drone_inspection {
 
     requirements = {
-        cpf-deterministic, // since we need deterministic planning for now
         constrained-state
     };
 
@@ -27,9 +26,17 @@ domain drone_inspection {
         BOX-IN-SHELF(location, box) : {non-fluent, bool, default=false};
         TASK-UTILITY(location, box) : {non-fluent, real, default = 500}; // reward for completing the task
         IS-STATION(location) : {non-fluent, bool, default= false};
+        
+        MOVE_PROB(drone) : {non-fluent, real, default=0.8};
+        ACTION_PROB(drone) : {non-fluent, real, default=0.8};
+
+        move-finish(drone) : {interm-fluent, bool, level=1};
+        action-finish(drone) : {interm-fluent, bool, level=1};
+
         complete(location, box) : {state-fluent, bool, default=false}; // state variable to monitor task completion
         taken-off(drone) : {state-fluent, bool, default=false}; // state fluent to monitor whether the drone has taken off
         current-position(drone, location) : {state-fluent, bool, default = false}; //state variable to monitor current position of the drone
+       
         take-off(drone, location) : {action-fluent, bool, default = false};
         //land(drone, location):{action-fluent, bool, default = false};
         moveto(drone, location) : {action-fluent, bool, default = false};
@@ -37,9 +44,11 @@ domain drone_inspection {
     // captureImage : {action-fluent, bool, default=false};
     };
 
-    cdfs{
+    cpfs{
+        move-finish(?d) = Bernoulli(MOVE_PROB(?d));
+        action-finish(?d) = Bernoulli(ACTION_PROB(?d));
         // a shelf with box is marked as complete only if the drone is moved to the position and captured the image
-        complete'(?s, ?b) = if(exists_{?d:drone} [BOX-IN-SHELF(?s, ?b) ^ moveto(?d,?s)] ^ captureImage(?d, ?s, ?b)) 
+        complete'(?s, ?b) = if(exists_{?d:drone} [BOX-IN-SHELF(?s, ?b) ^ moveto(?d,?s) ^ move-finish(?d)] ^ captureImage(?d, ?s, ?b) ^ action-finish(?d)) 
                                 then true
                             else complete(?s, ?b); 
         // current position is updated if the drone has taken off and moved to a shelf else previous position is retained
@@ -47,7 +56,7 @@ domain drone_inspection {
         taken-off'(?d) = if(exists_{?s:location}[take-off(?d, ?s) ^ IS-STATION(?s)])
                             then true
                         else taken-off(?d);
-        current-position'(?d,?s) =  if(exists_{?st:location}[taken-off(?d)] ^ moveto(?d, ?s))
+        current-position'(?d,?s) =  if(exists_{?st:location}[taken-off(?d)] ^ moveto(?d, ?s) ^ move-finish(?d))
                                     then true
                                 else if(exists_{?d_loc:location}[moveto(?d, ?d_loc)])
                                     then false
