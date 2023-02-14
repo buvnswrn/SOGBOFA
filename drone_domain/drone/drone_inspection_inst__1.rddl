@@ -21,6 +21,7 @@ non-fluents drone_inspection_nf {
 		BOX-IN-SHELF(shelf_511466, box_507038);
 		BOX-IN-SHELF(shelf_511466, box_508818);
 		BOX-IN-SHELF(shelf_511466, box_509900);
+        IS-STATION(launchpad_507730);
 
         MOVE_COST(launchpad_507730, shelf_511466 )  = 131.707562372079;
 		MOVE_COST( launchpad_507730, shelf_511352 )  = 248.128761484662;

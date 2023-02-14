@@ -26,9 +26,11 @@ domain drone_inspection {
         CAPTURE-COST(drone) : {non-fluent, real, default=1}; // cost of capturing the images
         BOX-IN-SHELF(location, box) : {non-fluent, bool, default=false};
         TASK-UTILITY(location, box) : {non-fluent, real, default = 500}; // reward for completing the task
+        IS-STATION(location) : {non-fluent, bool, default= false};
         complete(location, box) : {state-fluent, bool, default=false}; // state variable to monitor task completion
+        taken-off(drone) : {state-fluent, bool, default=false}; // state fluent to monitor whether the drone has taken off
         current-position(drone, location) : {state-fluent, bool, default = false}; //state variable to monitor current position of the drone
-        take-off(drone) : {action-fluent, bool, default = false};
+        take-off(drone, location) : {action-fluent, bool, default = false};
         //land(drone, location):{action-fluent, bool, default = false};
         moveto(drone, location) : {action-fluent, bool, default = false};
         captureImage(drone, location, box) : {action-fluent, bool, default=false};
@@ -42,7 +44,10 @@ domain drone_inspection {
                             else complete(?s, ?b); 
         // current position is updated if the drone has taken off and moved to a shelf else previous position is retained
         // current position can be at one shelf so move to other shelf should be false
-        current-position'(?d,?s) =  if(exists_{?st:location}[take-off(?d)] ^ moveto(?d, ?s))
+        taken-off'(?d) = if(exists_{?s:location}[take-off(?d, ?s) ^ IS-STATION(?s)])
+                            then true
+                        else taken-off(?d);
+        current-position'(?d,?s) =  if(exists_{?st:location}[taken-off(?d)] ^ moveto(?d, ?s))
                                     then true
                                 else if(exists_{?d_loc:location}[moveto(?d, ?d_loc)])
                                     then false
@@ -66,6 +71,7 @@ domain drone_inspection {
             //land(?d, ?s) => takeoff(?d,?s) ^ (exists_{?sh:location, ?b:box}[~complete(?sh,?b)]);// land only when the drone has already taken off and completed all the tasks
             forall_{?d:drone} [[sum_{?d:drone, ?sh:location, ?b:box}[captureImage(?d, ?s, ?b)]]<=1]; // capture image at one location in a given time;
             forall_{?l:location} [[sum_{?d:drone}[moveto(?d,?l)]] <=1]; // can move to only one shelf at a time
+            take-off(?d, ?s) <=> IS-STATION(?s); // drone can take off only in location that is designated as a station
     };
 
     state-invariants {
