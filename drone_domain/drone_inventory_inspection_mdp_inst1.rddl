@@ -1,0 +1,323 @@
+instance drone_inventory_inspection_mdp_inst__1 {
+
+	domain = drone_inventory_inspection_mdp;
+
+
+	objects {
+		drone: {
+			mavic2
+		};
+		capability : {
+			capture_image,
+			take_off
+		};
+		
+		location : {
+			launchpad_507730,
+			shelf_511466,
+			shelf_511352,
+			shelf_506838,
+			shelf_504664,
+			shelf_502782,
+			shelf_511914,
+			shelf_506484,
+			shelf_502272,
+			shelf_505882,
+			shelf_509048,
+			shelf_509342,
+			shelf_507238
+			// all locations of shelfs
+		};
+		
+		task : {
+			// list all boxes - tasks
+			box_502908,
+			box_502924,
+			box_503044,
+			box_503080,
+			box_503466,
+			box_503508,
+			box_503562,
+			box_503638,
+			box_504104,
+			box_504496,
+			box_504560,
+			box_504798,
+			box_504960,
+			box_505184,
+			box_505276,
+			box_505510,
+			box_505760,
+			box_505924,
+			box_506468,
+			box_506880,
+			box_506896,
+			box_507038,
+			box_507138,
+			box_507794,
+			box_508338,
+			box_508424,
+			box_508818,
+			box_508910,
+			box_509114,
+			box_509166,
+			box_509308,
+			box_509424,
+			box_509446,
+			box_509522,
+			box_509900,
+			box_509984,
+			box_511128,
+			box_511978,
+			box_512172,
+			launchpad_507730
+		};	
+	};
+
+	non-fluents {
+		MOVE_PROB(mavic2) = 0.9;
+		DO_PROB(mavic2) = 0.9;
+		DO_COST(mavic2, take_off) = 10;
+		DO_COST(mavic2, capture_image) = 10;
+		// distance between locations;
+		MOVE_COST( shelf_511466 , launchpad_507730 )  = 131.707562372079;
+		MOVE_COST( shelf_511466 , shelf_511352 )  = 160.078105935821;
+		MOVE_COST( shelf_511466 , shelf_506838 )  = 100;
+		MOVE_COST( shelf_511466 , shelf_504664 )  = 320.156211871642;
+		MOVE_COST( shelf_511466 , shelf_502782 )  = 269.258246023698;
+		MOVE_COST( shelf_511466 , shelf_511914 )  = 100.000015258789;
+		MOVE_COST( shelf_511466 , shelf_506484 )  = 125;
+		MOVE_COST( shelf_511466 , shelf_502272 )  = 269.258240356725;
+		MOVE_COST( shelf_511466 , shelf_505882 )  = 200;
+		MOVE_COST( shelf_511466 , shelf_509048 )  = 250;
+		MOVE_COST( shelf_511466 , shelf_509342 )  = 160.078115467912;
+		MOVE_COST( shelf_511466 , shelf_507238 )  = 235.849528301415;
+		MOVE_COST( shelf_511352 , launchpad_507730 )  = 248.128761484662;
+		MOVE_COST( shelf_511352 , shelf_511466 )  = 160.078105935821;
+		MOVE_COST( shelf_511352 , shelf_506838 )  = 125;
+		MOVE_COST( shelf_511352 , shelf_504664 )  = 160.078105935821;
+		MOVE_COST( shelf_511352 , shelf_502782 )  = 235.849541240842;
+		MOVE_COST( shelf_511352 , shelf_511914 )  = 235.849541240842;
+		MOVE_COST( shelf_511352 , shelf_506484 )  = 100;
+		MOVE_COST( shelf_511352 , shelf_502272 )  = 125;
+		MOVE_COST( shelf_511352 , shelf_505882 )  = 160.078105935821;
+		MOVE_COST( shelf_511352 , shelf_509048 )  = 160.078105935821;
+		MOVE_COST( shelf_511352 , shelf_509342 )  = 200.000015258789;
+		MOVE_COST( shelf_511352 , shelf_507238 )  = 100;
+		MOVE_COST( shelf_506838 , launchpad_507730 )  = 127.054638370675;
+		MOVE_COST( shelf_506838 , shelf_511466 )  = 100;
+		MOVE_COST( shelf_506838 , shelf_511352 )  = 125;
+		MOVE_COST( shelf_506838 , shelf_504664 )  = 269.258240356725;
+		MOVE_COST( shelf_506838 , shelf_502782 )  = 320.156221403733;
+		MOVE_COST( shelf_506838 , shelf_511914 )  = 200.000015258789;
+		MOVE_COST( shelf_506838 , shelf_506484 )  = 160.078105935821;
+		MOVE_COST( shelf_506838 , shelf_502272 )  = 250;
+		MOVE_COST( shelf_506838 , shelf_505882 )  = 100;
+		MOVE_COST( shelf_506838 , shelf_509048 )  = 269.258240356725;
+		MOVE_COST( shelf_506838 , shelf_509342 )  = 235.849541240842;
+		MOVE_COST( shelf_506838 , shelf_507238 )  = 160.078105935821;
+		MOVE_COST( shelf_504664 , launchpad_507730 )  = 396.281317457471;
+		MOVE_COST( shelf_504664 , shelf_511466 )  = 320.156211871642;
+		MOVE_COST( shelf_504664 , shelf_511352 )  = 160.078105935821;
+		MOVE_COST( shelf_504664 , shelf_506838 )  = 269.258240356725;
+		MOVE_COST( shelf_504664 , shelf_502782 )  = 300;
+		MOVE_COST( shelf_504664 , shelf_511914 )  = 390.512483795333;
+		MOVE_COST( shelf_504664 , shelf_506484 )  = 235.849528301415;
+		MOVE_COST( shelf_504664 , shelf_502272 )  = 100;
+		MOVE_COST( shelf_504664 , shelf_505882 )  = 250;
+		MOVE_COST( shelf_504664 , shelf_509048 )  = 200;
+		MOVE_COST( shelf_504664 , shelf_509342 )  = 325;
+		MOVE_COST( shelf_504664 , shelf_507238 )  = 125;
+		MOVE_COST( shelf_502782 , launchpad_507730 )  = 400.812786585781;
+		MOVE_COST( shelf_502782 , shelf_511466 )  = 269.258246023698;
+		MOVE_COST( shelf_502782 , shelf_511352 )  = 235.849541240842;
+		MOVE_COST( shelf_502782 , shelf_506838 )  = 320.156221403733;
+		MOVE_COST( shelf_502782 , shelf_504664 )  = 300;
+		MOVE_COST( shelf_502782 , shelf_511914 )  = 250;
+		MOVE_COST( shelf_502782 , shelf_506484 )  = 160.078115467912;
+		MOVE_COST( shelf_502782 , shelf_502272 )  = 200.000015258789;
+		MOVE_COST( shelf_502782 , shelf_505882 )  = 390.512483795333;
+		MOVE_COST( shelf_502782 , shelf_509048 )  = 100.000015258789;
+		MOVE_COST( shelf_502782 , shelf_509342 )  = 125;
+		MOVE_COST( shelf_502782 , shelf_507238 )  = 325;
+		MOVE_COST( shelf_511914 , launchpad_507730 )  = 196.343799499348;
+		MOVE_COST( shelf_511914 , shelf_511466 )  = 100.000015258789;
+		MOVE_COST( shelf_511914 , shelf_511352 )  = 235.849541240842;
+		MOVE_COST( shelf_511914 , shelf_506838 )  = 200.000015258789;
+		MOVE_COST( shelf_511914 , shelf_504664 )  = 390.512483795333;
+		MOVE_COST( shelf_511914 , shelf_502782 )  = 250;
+		MOVE_COST( shelf_511914 , shelf_506484 )  = 160.078115467912;
+		MOVE_COST( shelf_511914 , shelf_502272 )  = 320.156221403733;
+		MOVE_COST( shelf_511914 , shelf_505882 )  = 300;
+		MOVE_COST( shelf_511914 , shelf_509048 )  = 269.258246023698;
+		MOVE_COST( shelf_511914 , shelf_509342 )  = 125;
+		MOVE_COST( shelf_511914 , shelf_507238 )  = 325;
+		MOVE_COST( shelf_506484 , launchpad_507730 )  = 250.543176180083;
+		MOVE_COST( shelf_506484 , shelf_511466 )  = 125;
+		MOVE_COST( shelf_506484 , shelf_511352 )  = 100;
+		MOVE_COST( shelf_506484 , shelf_506838 )  = 160.078105935821;
+		MOVE_COST( shelf_506484 , shelf_504664 )  = 235.849528301415;
+		MOVE_COST( shelf_506484 , shelf_502782 )  = 160.078115467912;
+		MOVE_COST( shelf_506484 , shelf_511914 )  = 160.078115467912;
+		MOVE_COST( shelf_506484 , shelf_502272 )  = 160.078105935821;
+		MOVE_COST( shelf_506484 , shelf_505882 )  = 235.849528301415;
+		MOVE_COST( shelf_506484 , shelf_509048 )  = 125;
+		MOVE_COST( shelf_506484 , shelf_509342 )  = 100.000015258789;
+		MOVE_COST( shelf_506484 , shelf_507238 )  = 200;
+		MOVE_COST( shelf_502272 , launchpad_507730 )  = 371.810278798639;
+		MOVE_COST( shelf_502272 , shelf_511466 )  = 269.258240356725;
+		MOVE_COST( shelf_502272 , shelf_511352 )  = 125;
+		MOVE_COST( shelf_502272 , shelf_506838 )  = 250;
+		MOVE_COST( shelf_502272 , shelf_504664 )  = 100;
+		MOVE_COST( shelf_502272 , shelf_502782 )  = 200.000015258789;
+		MOVE_COST( shelf_502272 , shelf_511914 )  = 320.156221403733;
+		MOVE_COST( shelf_502272 , shelf_506484 )  = 160.078105935821;
+		MOVE_COST( shelf_502272 , shelf_505882 )  = 269.258240356725;
+		MOVE_COST( shelf_502272 , shelf_509048 )  = 100;
+		MOVE_COST( shelf_502272 , shelf_509342 )  = 235.849541240842;
+		MOVE_COST( shelf_502272 , shelf_507238 )  = 160.078105935821;
+		MOVE_COST( shelf_505882 , launchpad_507730 )  = 186.919448632321;
+		MOVE_COST( shelf_505882 , shelf_511466 )  = 200;
+		MOVE_COST( shelf_505882 , shelf_511352 )  = 160.078105935821;
+		MOVE_COST( shelf_505882 , shelf_506838 )  = 100;
+		MOVE_COST( shelf_505882 , shelf_504664 )  = 250;
+		MOVE_COST( shelf_505882 , shelf_502782 )  = 390.512483795333;
+		MOVE_COST( shelf_505882 , shelf_511914 )  = 300;
+		MOVE_COST( shelf_505882 , shelf_506484 )  = 235.849528301415;
+		MOVE_COST( shelf_505882 , shelf_502272 )  = 269.258240356725;
+		MOVE_COST( shelf_505882 , shelf_509048 )  = 320.156211871642;
+		MOVE_COST( shelf_505882 , shelf_509342 )  = 325;
+		MOVE_COST( shelf_505882 , shelf_507238 )  = 125;
+		MOVE_COST( shelf_509048 , launchpad_507730 )  = 373.425875207937;
+		MOVE_COST( shelf_509048 , shelf_511466 )  = 250;
+		MOVE_COST( shelf_509048 , shelf_511352 )  = 160.078105935821;
+		MOVE_COST( shelf_509048 , shelf_506838 )  = 269.258240356725;
+		MOVE_COST( shelf_509048 , shelf_504664 )  = 200;
+		MOVE_COST( shelf_509048 , shelf_502782 )  = 100.000015258789;
+		MOVE_COST( shelf_509048 , shelf_511914 )  = 269.258246023698;
+		MOVE_COST( shelf_509048 , shelf_506484 )  = 125;
+		MOVE_COST( shelf_509048 , shelf_502272 )  = 100;
+		MOVE_COST( shelf_509048 , shelf_505882 )  = 320.156211871642;
+		MOVE_COST( shelf_509048 , shelf_509342 )  = 160.078115467912;
+		MOVE_COST( shelf_509048 , shelf_507238 )  = 235.849528301415;
+		MOVE_COST( shelf_509342 , launchpad_507730 )  = 289.78593607394;
+		MOVE_COST( shelf_509342 , shelf_511466 )  = 160.078115467912;
+		MOVE_COST( shelf_509342 , shelf_511352 )  = 200.000015258789;
+		MOVE_COST( shelf_509342 , shelf_506838 )  = 235.849541240842;
+		MOVE_COST( shelf_509342 , shelf_504664 )  = 325;
+		MOVE_COST( shelf_509342 , shelf_502782 )  = 125;
+		MOVE_COST( shelf_509342 , shelf_511914 )  = 125;
+		MOVE_COST( shelf_509342 , shelf_506484 )  = 100.000015258789;
+		MOVE_COST( shelf_509342 , shelf_502272 )  = 235.849541240842;
+		MOVE_COST( shelf_509342 , shelf_505882 )  = 325;
+		MOVE_COST( shelf_509342 , shelf_509048 )  = 160.078115467912;
+		MOVE_COST( shelf_509342 , shelf_507238 )  = 300;
+		MOVE_COST( shelf_507238 , launchpad_507730 )  = 283.485240217934;
+		MOVE_COST( shelf_507238 , shelf_511466 )  = 235.849528301415;
+		MOVE_COST( shelf_507238 , shelf_511352 )  = 100;
+		MOVE_COST( shelf_507238 , shelf_506838 )  = 160.078105935821;
+		MOVE_COST( shelf_507238 , shelf_504664 )  = 125;
+		MOVE_COST( shelf_507238 , shelf_502782 )  = 325;
+		MOVE_COST( shelf_507238 , shelf_511914 )  = 325;
+		MOVE_COST( shelf_507238 , shelf_506484 )  = 200;
+		MOVE_COST( shelf_507238 , shelf_502272 )  = 160.078105935821;
+		MOVE_COST( shelf_507238 , shelf_505882 )  = 125;
+		MOVE_COST( shelf_507238 , shelf_509048 )  = 235.849528301415;
+		MOVE_COST( shelf_507238 , shelf_509342 )  = 300;
+		
+		// TASK( capture_box_id,capture,shelf_001); - non_fluents_tasks
+		TASK(box_502908,capture_image,shelf_511466);
+		TASK(box_502924,capture_image,shelf_511352);
+		TASK(box_503044,capture_image,shelf_506838);
+		TASK(box_503080,capture_image,shelf_511352);
+		TASK(box_503466,capture_image,shelf_504664);
+		TASK(box_503508,capture_image,shelf_502782);
+		TASK(box_503562,capture_image,shelf_504664);
+		TASK(box_503638,capture_image,shelf_511914);
+		TASK(box_504104,capture_image,shelf_511914);
+		TASK(box_504496,capture_image,shelf_506484);
+		TASK(box_504560,capture_image,shelf_504664);
+		TASK(box_504798,capture_image,shelf_502272);
+		TASK(box_504960,capture_image,shelf_506484);
+		TASK(box_505184,capture_image,shelf_505882);
+		TASK(box_505276,capture_image,shelf_509048);
+		TASK(box_505510,capture_image,shelf_504664);
+		TASK(box_505760,capture_image,shelf_509048);
+		TASK(box_505924,capture_image,shelf_502782);
+		TASK(box_506468,capture_image,shelf_504664);
+		TASK(box_506880,capture_image,shelf_509342);
+		TASK(box_506896,capture_image,shelf_511466);
+		TASK(box_507038,capture_image,shelf_511466);
+		TASK(box_507138,capture_image,shelf_511914);
+		TASK(box_507794,capture_image,shelf_507238);
+		TASK(box_508338,capture_image,shelf_511914);
+		TASK(box_508424,capture_image,shelf_504664);
+		TASK(box_508818,capture_image,shelf_511466);
+		TASK(box_508910,capture_image,shelf_506484);
+		TASK(box_509114,capture_image,shelf_506484);
+		TASK(box_509166,capture_image,shelf_504664);
+		TASK(box_509308,capture_image,shelf_504664);
+		TASK(box_509424,capture_image,shelf_506838);
+		TASK(box_509446,capture_image,shelf_502272);
+		TASK(box_509522,capture_image,shelf_502272);
+		TASK(box_509900,capture_image,shelf_511466);
+		TASK(box_509984,capture_image,shelf_509342);
+		TASK(box_511128,capture_image,shelf_507238);
+		TASK(box_511978,capture_image,shelf_509342);
+		TASK(box_512172,capture_image,shelf_505882);
+		
+		// TASK_UTILITY(capture_box_id) = 100;
+		TASK_UTILITY(box_502908) = 100;
+		TASK_UTILITY(box_502924) = 100;
+		TASK_UTILITY(box_503044) = 100;
+		TASK_UTILITY(box_503080) = 100;
+		TASK_UTILITY(box_503466) = 100;
+		TASK_UTILITY(box_503508) = 100;
+		TASK_UTILITY(box_503562) = 100;
+		TASK_UTILITY(box_503638) = 100;
+		TASK_UTILITY(box_504104) = 100;
+		TASK_UTILITY(box_504496) = 100;
+		TASK_UTILITY(box_504560) = 100;
+		TASK_UTILITY(box_504798) = 100;
+		TASK_UTILITY(box_504960) = 100;
+		TASK_UTILITY(box_505184) = 100;
+		TASK_UTILITY(box_505276) = 100;
+		TASK_UTILITY(box_505510) = 100;
+		TASK_UTILITY(box_505760) = 100;
+		TASK_UTILITY(box_505924) = 100;
+		TASK_UTILITY(box_506468) = 100;
+		TASK_UTILITY(box_506880) = 100;
+		TASK_UTILITY(box_506896) = 100;
+		TASK_UTILITY(box_507038) = 100;
+		TASK_UTILITY(box_507138) = 100;
+		TASK_UTILITY(box_507794) = 100;
+		TASK_UTILITY(box_508338) = 100;
+		TASK_UTILITY(box_508424) = 100;
+		TASK_UTILITY(box_508818) = 100;
+		TASK_UTILITY(box_508910) = 100;
+		TASK_UTILITY(box_509114) = 100;
+		TASK_UTILITY(box_509166) = 100;
+		TASK_UTILITY(box_509308) = 100;
+		TASK_UTILITY(box_509424) = 100;
+		TASK_UTILITY(box_509446) = 100;
+		TASK_UTILITY(box_509522) = 100;
+		TASK_UTILITY(box_509900) = 100;
+		TASK_UTILITY(box_509984) = 100;
+		TASK_UTILITY(box_511128) = 100;
+		TASK_UTILITY(box_511978) = 100;
+		TASK_UTILITY(box_512172) = 100;
+		TASK_UTILITY(launchpad_507730) = 100;
+		
+		
+	};
+
+	init-state {
+		current-position(mavic2, launchpad_507730);
+		// prerequisite-complete()
+	};
+
+	horizon = 10;
+
+	discount = 0.8;
+
+}

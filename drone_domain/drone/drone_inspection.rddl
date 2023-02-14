@@ -1,0 +1,78 @@
+///////////////////////////////////////////////
+// Drone inspecting the industry warehouse in a
+// deterministic way. The drone has to takeoff
+// determine low cost path and navigate to the shelf
+// finish the task (capturing image) and move to next location. 
+// After all tasks are complete, finally move to home and land. 
+///////////////////////////////////////////////
+
+domain drone_inspection {
+
+    requirements = {
+        cpf-deterministic, // since we need deterministic planning for now
+        constrained-state
+    };
+
+    types {
+        drone: object; // representing drone object. can have multiple drones inspecting the warehouse
+        box : object; // objects representing different boxes
+        // shelf: object; // location of the boxes and launchpad
+        // station: object; // starting position of the drone
+        location: object; // location representing both shelf and station
+    };
+
+    pvariables {
+        MOVE-COST(location, location) : {non-fluent, real, default = 100}; // cost of moving from one shelf to other 
+        CAPTURE-COST(drone) : {non-fluent, real, default=1}; // cost of capturing the images
+        BOX-IN-SHELF(location, box) : {non-fluent, bool, default=false};
+        TASK-UTILITY(location, box) : {non-fluent, real, default = 500}; // reward for completing the task
+        complete(location, box) : {state-fluent, bool, default=false}; // state variable to monitor task completion
+        current-position(drone, location) : {state-fluent, bool, default = false}; //state variable to monitor current position of the drone
+        take-off(drone) : {action-fluent, bool, default = false};
+        //land(drone, location):{action-fluent, bool, default = false};
+        moveto(drone, location) : {action-fluent, bool, default = false};
+        captureImage(drone, location, box) : {action-fluent, bool, default=false};
+    // captureImage : {action-fluent, bool, default=false};
+    };
+
+    cdfs{
+        // a shelf with box is marked as complete only if the drone is moved to the position and captured the image
+        complete'(?s, ?b) = if(exists_{?d:drone} [BOX-IN-SHELF(?s, ?b) ^ moveto(?d,?s)] ^ captureImage(?d, ?s, ?b)) 
+                                then true
+                            else complete(?s, ?b); 
+        // current position is updated if the drone has taken off and moved to a shelf else previous position is retained
+        // current position can be at one shelf so move to other shelf should be false
+        current-position'(?d,?s) =  if(exists_{?st:location}[take-off(?d)] ^ moveto(?d, ?s))
+                                    then true
+                                else if(exists_{?d_loc:location}[moveto(?d, ?d_loc)])
+                                    then false
+                                else current-position(?d, ?s);
+        
+    };
+
+    // state-action-constraints {
+    //     // land(?d, ?s) => forall_{?d : drone, ?sh:location, ?b:box}
+    //     land(?d, ?s) => takeoff(?d,?s) ^ (exists_{?sh:location, ?b:box}[~complete(?sh,?b)]) // land only when the drone has already taken off and completed all the tasks
+    //     // takeoff(?d, ?s) => ~ land(?d, ?s) ^ (exists_{?sh, location})
+    // }
+
+    reward  = [sum_{?s:location, ?b:box}[[complete(?s,?b)] * TASK-UTILITY(?s, ?b)]]
+			- [sum_{?d:drone, ?s:location, ?b:box}[captureImage(?d,?s, ?b)] * CAPTURE-COST(?d)]
+			- [sum_{?d:drone, ?s:location, ?sh:location}
+				[[current-position(?d, ?s) & moveto(?d, ?sh)] * (MOVE_COST(?s,?sh))]
+			];
+    
+    action-preconditions {
+            //land(?d, ?s) => takeoff(?d,?s) ^ (exists_{?sh:location, ?b:box}[~complete(?sh,?b)]);// land only when the drone has already taken off and completed all the tasks
+            forall_{?d:drone} [[sum_{?d:drone, ?sh:location, ?b:box}[captureImage(?d, ?s, ?b)]]<=1]; // capture image at one location in a given time;
+            forall_{?l:location} [[sum_{?d:drone}[moveto(?d,?l)]] <=1]; // can move to only one shelf at a time
+    };
+
+    state-invariants {
+        forall_{?d:drone} [[sum_{?l:location}[current-position(?d,?l)]] ==1]; // drone can be in one position at a time
+    };
+
+
+    
+
+}

@@ -1,0 +1,41 @@
+non-fluents drone_inspection_nf {
+    domain = drone_inspection;
+
+    objects {
+        drone : {mavic2};
+        location : {shelf_511466,shelf_511352, launchpad_507730};
+        box : {box_502908,
+			box_502924,
+			box_503080,
+			box_506896,
+			box_507038,
+			box_508818,
+			box_509900};
+    };
+
+    non-fluents {
+        BOX-IN-SHELF(shelf_511466, box_502908);
+		BOX-IN-SHELF(shelf_511352, box_502924);
+		BOX-IN-SHELF(shelf_511352, box_503080);
+		BOX-IN-SHELF(shelf_511466, box_506896);
+		BOX-IN-SHELF(shelf_511466, box_507038);
+		BOX-IN-SHELF(shelf_511466, box_508818);
+		BOX-IN-SHELF(shelf_511466, box_509900);
+
+        MOVE_COST(launchpad_507730, shelf_511466 )  = 131.707562372079;
+		MOVE_COST( launchpad_507730, shelf_511352 )  = 248.128761484662;
+		MOVE_COST( shelf_511352 , shelf_511466 )  = 160.078105935821;
+		MOVE_COST( shelf_511466, shelf_511352 )  = 160.078105935821;
+		MOVE_COST( launchpad_507730 , launchpad_507730 )  = 10060.078105935821;
+    };
+}
+
+instance drone_inspection_inst__1 {
+    domain = drone_inspection;
+    non-fluents = drone_inspection_nf;
+    init-state {
+        current-position(mavic2, launchpad_507730);
+    };
+    horizon = 40;
+    discount = 0.8;
+}

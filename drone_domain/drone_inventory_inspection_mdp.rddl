@@ -1,0 +1,99 @@
+domain drone_inventory_inspection_mdp {
+	requirements {
+	preconditions,
+	concurrent
+	};
+	
+	types{
+		drone 		: object;
+		box 		: object;
+		location 	: object;
+		task 		: object;
+		capability	: object;
+	};
+	
+	pvariables {
+	
+	///////// non-fluents     //////////
+	TASK(task, capability, location) 	: {non-fluent, bool, default=false};
+	MOVE_COST(location, location) 		: {non-fluent, real, default=100};
+	DO_COST(drone, capability) 			: {non-fluent, real, default = 10};
+	TASK-UTILITY(task)					: {non-fluent, real, default = 100};
+	 TASK_PRIORITY(task)                : { non-fluent, real, default = 2 };
+	
+	MOVE_PROB(drone) 					: {non-fluent, real, default = 0.8};
+	//ACTION_PROB(drone) 					: {non-fluent, real, default= 0.7};
+	DO_PROB(drone) 						: {non-fluent, real , default = 0.8};
+	
+	///////// interim-fluents //////////
+	move-finish(drone) 					: {interm-fluent, bool, level =1};
+	action-finish(drone) 				: {interm-fluent, bool, level=1};
+	
+	///////// state-fluents   //////////
+	check-complete(task) 				: {state-fluent, bool, default = true};
+	complete(task) 						: {state-fluent, bool, default = false};
+	current-position(drone, location) 	: { state-fluent, bool, default=false};
+	
+	prerequisite-complete(task, task) 	: { state-fluent, bool, default=false};
+	
+	///////// action-fluents  //////////
+	do(drone,capability) 				: {action-fluent, bool, default=false};
+	
+	moveto(drone, location) 			: {action-fluent, bool, default = false};
+	
+	};
+	
+	cpfs {
+		move-finish(?d) = 	Bernoulli(MOVE_PROB(?d));
+		
+		action-finish(?d) = Bernoulli(DO_PROB(?d));
+
+		current-position'(?d, ?l) = if ( moveto(?d,?l))
+										then true
+									else if(exists_{?d_loc : location} [moveto(?d, ?d_loc)])
+										then false
+									else current-position(?d,?l);
+		
+		complete'(?a) = if(exists_{?d : drone, ?c : capability, ?l:location}
+							[ do(?d, ?c) & action-finish(?d)
+							& TASK(?a, ?c, ?l) & current-position(?d, ?l)
+							& (forall_{?t:task} prerequisite-complete(?t,?a))
+							])
+							then true
+						else
+							complete(?a);
+							
+		
+		check-complete'(?t) = if( complete(?t))
+								then false
+							else
+								check-complete(?t);
+								
+		prerequisite-complete'(?t1,?t2) = 
+								if( prerequisite-complete(?t1, ?t2))
+									then true
+								else if(exists_{?d:drone, ?c:capability, ?l:location}
+								[do(?d,?c) & action-finish(?d)
+									& TASK(?t1, ?c, ?l) & current-position(?d,?l)
+								])
+								then true
+							else
+								false;
+	
+	};
+	
+	reward = [sum_{?t:task}[[complete(?t) & check-complete(?t)] * TASK-UTILITY(?t) * TASK_PRIORITY(?t)]]
+			- [sum_{?d:drone, ?c:capability}[do(?d,?c)] * DO_COST(?d,?c)]
+			- [sum_{?d:drone, ?l:location, ?d_loc:location}
+				[[move-finish(?d) & current-position(?d, ?l) & moveto(?d, ?d_loc)] * (MOVE_COST(?l,?d_loc))]
+			];
+			
+	action-preconditions {
+		forall_{?d:drone}[[sum_{?c:capability} [do(?d,?c)]]<=1];
+		forall_{?l:location} [[sum_{?d:drone}[moveto(?d,?l)]] <=1];
+	};
+	
+	state-invariants {
+		forall_{?d:drone} [[sum_{?l:location}[current-position(?d,?l)]] ==1];
+	};
+}
