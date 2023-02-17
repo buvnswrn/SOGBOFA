@@ -1,4 +1,4 @@
-non-fluents drone_inspection_nf {
+non-fluents nf_drone_inspection_inst__2 {
     domain = drone_inspection;
 
     objects {
@@ -30,12 +30,20 @@ non-fluents drone_inspection_nf {
 		MOVE_COST( shelf_511352 , shelf_511466 )  = 160.078105935821;
 		MOVE_COST( shelf_511466, shelf_511352 )  = 160.078105935821;
 		MOVE_COST( launchpad_507730 , launchpad_507730 )  = 10060.078105935821;
+
+        TASK_UTILITY(box_502908) = 100;
+		TASK_UTILITY(box_502924) = 100;
+		TASK_UTILITY(box_503080) = 100;
+		TASK_UTILITY(box_506896) = 100;
+		TASK_UTILITY(box_507038) = 100;
+		TASK_UTILITY(box_508818) = 100;
+		TASK_UTILITY(box_509900) = 100;
     };
 }
 
-instance drone_inspection_inst__1 {
+instance drone_inspection_inst__2 {
     domain = drone_inspection;
-    non-fluents = drone_inspection_nf;
+    non-fluents = nf_drone_inspection_inst__2;
     init-state {
         current-position(mavic2, launchpad_507730);
     };

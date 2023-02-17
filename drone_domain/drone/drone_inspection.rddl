@@ -21,7 +21,7 @@ domain drone_inspection {
     };
 
     pvariables {
-        MOVE-COST(location, location) : {non-fluent, real, default = 100}; // cost of moving from one shelf to other 
+        MOVE_COST(location, location) : {non-fluent, real, default = 100}; // cost of moving from one shelf to other 
         CAPTURE-COST(drone) : {non-fluent, real, default=1}; // cost of capturing the images
         BOX-IN-SHELF(location, box) : {non-fluent, bool, default=false};
         TASK-UTILITY(location, box) : {non-fluent, real, default = 500}; // reward for completing the task
@@ -38,15 +38,21 @@ domain drone_inspection {
         current-position(drone, location) : {state-fluent, bool, default = false}; //state variable to monitor current position of the drone
        
         take-off(drone, location) : {action-fluent, bool, default = false};
-        //land(drone, location):{action-fluent, bool, default = false};
         moveto(drone, location) : {action-fluent, bool, default = false};
         captureImage(drone, location, box) : {action-fluent, bool, default=false};
-    // captureImage : {action-fluent, bool, default=false};
     };
 
     cpfs{
         move-finish(?d) = Bernoulli(MOVE_PROB(?d));
+
         action-finish(?d) = Bernoulli(ACTION_PROB(?d));
+
+         current-position'(?d,?s) =  if(taken-off(?d) ^ moveto(?d, ?s) ^ move-finish(?d))
+                                    then true
+                                else if(exists_{?d_loc:location}[moveto(?d, ?d_loc)])
+                                    then false
+                                else current-position(?d, ?s);
+
         // a shelf with box is marked as complete only if the drone is moved to the position and captured the image
         complete'(?s, ?b) = if(exists_{?d:drone} [BOX-IN-SHELF(?s, ?b) ^ moveto(?d,?s) ^ move-finish(?d)] ^ captureImage(?d, ?s, ?b) ^ action-finish(?d)) 
                                 then true
@@ -55,12 +61,9 @@ domain drone_inspection {
         // current position can be at one shelf so move to other shelf should be false
         taken-off'(?d) = if(exists_{?s:location}[take-off(?d, ?s) ^ IS-STATION(?s)])
                             then true
-                        else taken-off(?d);
-        current-position'(?d,?s) =  if(exists_{?st:location}[taken-off(?d)] ^ moveto(?d, ?s) ^ move-finish(?d))
-                                    then true
-                                else if(exists_{?d_loc:location}[moveto(?d, ?d_loc)])
-                                    then false
-                                else current-position(?d, ?s);
+                        else 
+                            false;
+       
         
     };
 
@@ -78,9 +81,9 @@ domain drone_inspection {
     
     action-preconditions {
             //land(?d, ?s) => takeoff(?d,?s) ^ (exists_{?sh:location, ?b:box}[~complete(?sh,?b)]);// land only when the drone has already taken off and completed all the tasks
-            forall_{?d:drone} [[sum_{?d:drone, ?sh:location, ?b:box}[captureImage(?d, ?s, ?b)]]<=1]; // capture image at one location in a given time;
-            forall_{?l:location} [[sum_{?d:drone}[moveto(?d,?l)]] <=1]; // can move to only one shelf at a time
-            take-off(?d, ?s) <=> IS-STATION(?s); // drone can take off only in location that is designated as a station
+          forall_{?d:drone} [[sum_{?d:drone, ?sh:location, ?b:box}[captureImage(?d, ?sh, ?b)]]<=1]; // capture image at one location in a given time;
+           forall_{?l:location} [[sum_{?d:drone}[moveto(?d,?l)]] <=1]; // can move to only one shelf at a time
+            //take-off(?d, ?s) <=> IS-STATION(?s); // drone can take off only in location that is designated as a station
     };
 
     state-invariants {
